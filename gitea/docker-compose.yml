@@ -1,0 +1,35 @@
+services:
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    environment:
+     # - TZ="Europe/Berlin" # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=${GITEA__database__HOST}
+      - GITEA__database__NAME=${GITEA__database__NAME}
+      - GITEA__database__USER=${GITEA__database__USER}
+      - GITEA__database__PASSWD=${GITEA__database__PASSWD}
+    restart: unless-stopped
+    networks:
+      - gitea
+    ports:
+      - "3001:3000"
+      - "3002:22"
+    volumes:
+      - gitea_data:/data
+      - /home/git/.ssh/:/data/git/.ssh
+      - /etc/timezone:/etc/timezone:ro    # set in environment TZ="Europe/Berlin"
+      - /etc/localtime:/etc/localtime:ro  # set in environment TZ="Europe/Berlin"
+
+
+networks:
+  gitea:
+    name: gitea
+    external: false
+
+
+volumes:
+  gitea_data:
+    name: gitea_data
