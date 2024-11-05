@@ -1,0 +1,35 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    env_file: "jellyfin.env"
+    user: ${UID}:${GID}
+    network_mode: bridge
+    environment:
+      - PUID=${UID}
+      - PGID=${PID}
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_HOST_IP}:${JELLYFIN_HOST_PORT}
+    ports:
+      - 8096:8096                                    # Http webUI
+      - 8920:8920                                    # Https webUI (you need to set up your own certificate).
+      - 7359:7359/udp                                # Allows clients to discover Jellyfin on the local network.
+      - 1900:1900/udp                                # Service discovery used by DNLA and clients.
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro             # same timezone as local machine
+      - jellyfin_config:/config
+      - jellyfin_cache:/cache
+      - jellyfin_media:/media
+
+
+volumes:
+  jellyfin_config:
+        name: jellyfin_config
+  jellyfin_cache:
+        name: jellyfin_cache
+  jellyfin_media:
+      name: jellyfin_media
+      driver_opts:
+        type: cifs
+        device: ${NAS_PATH}'
+        o: "iocharset=utf8,username=${NAS_USERNAME},password=${NAS_PASSWORD},uid=${UID},gid=${GID}"
