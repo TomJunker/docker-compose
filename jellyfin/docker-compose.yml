@@ -24,12 +24,12 @@ services:
 
 volumes:
   jellyfin_config:
-        name: jellyfin_config
+    name: jellyfin_config
   jellyfin_cache:
-        name: jellyfin_cache
+    name: jellyfin_cache
   jellyfin_media:
-      name: jellyfin_media
-      driver_opts:
-        type: cifs
-        device: ${NAS_PATH}'
-        o: "iocharset=utf8,username=${NAS_USERNAME},password=${NAS_PASSWORD},uid=${UID},gid=${GID}"
+    name: jellyfin_media
+    driver_opts:
+      type: cifs
+      device: ${NAS_PATH}'
+      o: "iocharset=utf8,username=${NAS_USERNAME},password=${NAS_PASSWORD},uid=${UID},gid=${GID}"
